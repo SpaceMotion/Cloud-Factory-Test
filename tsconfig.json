@@ -1,0 +1,10 @@
+{
+  "include": ["./src/**/*"],
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "lib": ["ES6"],
+    "module": "CommonJS",
+    "outDir": "./build",
+    "jsx": "react-native"
+  }
+}
