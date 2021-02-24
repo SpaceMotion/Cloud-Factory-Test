@@ -22,21 +22,24 @@ type TableRow<CID extends string | number | symbol> = {
 };
 
 type TableCellRenderer<
-  T extends TableRow<string | number | symbol>,
-  CID extends keyof T
-> = (columnId: CID, data: T[CID]) => React.ReactElement;
+  CID extends string | number | symbol,
+  R extends TableRow<CID>
+> = (columnId: CID, data: R[CID]) => React.ReactElement;
 
 interface TableProps<C extends TableColumns, R extends TableRow<keyof C>> {
   columns: C;
   data: R[];
-  renderCell: TableCellRenderer<R, keyof R>;
+  renderCell: TableCellRenderer<keyof R, R>;
   style?: StyleProp<ViewStyle>;
 }
 
-function renderRow<CID extends string, TR extends TableRow<CID>>(
-  renderCell: TableCellRenderer<TR[CID], keyof TR[CID]>,
+function renderRow<
+  CID extends string | number | symbol,
+  R extends TableRow<CID>
+>(
+  renderCell: TableCellRenderer<CID, R[CID]>,
   columns: string[],
-  item: ListRenderItemInfo<TR>,
+  item: ListRenderItemInfo<R>,
 ) {
   return (
     <View style={styles.row}>
@@ -50,7 +53,7 @@ function renderRow<CID extends string, TR extends TableRow<CID>>(
             idx === 0 ? styles.cellBorderLeft : null,
           ]}
           key={columnId}>
-          {renderCell(columnId, item.item[columnId])}
+          {renderCell(columnId as CID, item.item[columnId])}
         </View>
       ))}
     </View>
@@ -92,9 +95,9 @@ export function Table<C extends TableColumns, R extends TableRow<keyof C>>(
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   headerColumn: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 3,
