@@ -30,6 +30,7 @@ interface TableProps<C extends TableColumns, R extends TableRow<keyof C>> {
   columns: C;
   data: R[];
   renderCell: TableCellRenderer<keyof R, R>;
+  rowKeyExtractor: (item: R, index: number) => string;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -87,6 +88,7 @@ export function Table<C extends TableColumns, R extends TableRow<keyof C>>(
       <FlatList
         data={props.data}
         renderItem={renderRow.bind(null, props.renderCell, columns)}
+        keyExtractor={props.rowKeyExtractor}
       />
     </View>
   );
